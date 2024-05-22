@@ -1,1 +1,0 @@
-Create Table Temp(Empid Number);

@@ -2,10 +2,10 @@ name: Deploy to Snowflake
 
 on:
   push:
-    paths:
-      - 'Deploy/**'
     branches:
       - main
+    paths:
+      - 'Deploy/**'
 
 jobs:
   deploy:
@@ -35,7 +35,3 @@ jobs:
         SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
       run: |
         python .github/workflows/deploy_to_snowflake.py
-
-    - name: Clean up
-      run: |
-        rm -rf ./*
