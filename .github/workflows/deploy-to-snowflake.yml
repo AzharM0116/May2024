@@ -2,6 +2,8 @@ name: Deploy to Snowflake
 
 on:
   push:
+    paths:
+      - 'Deploy/**'
     branches:
       - main
 
