@@ -21,12 +21,16 @@ jobs:
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y unzip curl
 
-    - name: Install SnowSQL
+    - name: Download and Install SnowSQL
       run: |
-        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/scripts/installers/ubuntu18/snowflake-snowsql-linux_x86_64.bash
-        bash snowflake-snowsql-linux_x86_64.bash --yes
+        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/scripts/installers/ubuntu20/snowflake-snowsql-linux_x86_64.bash
+        chmod +x snowflake-snowsql-linux_x86_64.bash
+        ./snowflake-snowsql-linux_x86_64.bash --yes
         echo 'export PATH=$PATH:/root/.snowsql/bin' >> $GITHUB_ENV
 
+    - name: Verify SnowSQL Installation
+      run: snowsql --version
+     
     - name: Verify SnowSQL Installation
       run: snowsql --version
 
