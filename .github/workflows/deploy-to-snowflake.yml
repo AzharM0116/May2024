@@ -32,7 +32,7 @@ jobs:
         SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
         SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
       run: |
-        python deploy_to_snowflake.py
+        python .github/workflows/deploy_to_snowflake.py
 
     - name: Clean up
       run: |
