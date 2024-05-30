@@ -23,14 +23,12 @@ jobs:
 
     - name: Download and Install SnowSQL
       run: |
-        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/scripts/installers/ubuntu20/snowflake-snowsql-linux_x86_64.bash
-        chmod +x snowflake-snowsql-linux_x86_64.bash
-        ./snowflake-snowsql-linux_x86_64.bash --yes
-        echo 'export PATH=$PATH:/root/.snowsql/bin' >> $GITHUB_ENV
+        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64
+        chmod +x snowsql-linux_x86_64
+        ./snowsql-linux_x86_64 -n
+        echo 'export PATH=$PATH:$HOME/bin' >> $GITHUB_ENV
+        export PATH=$PATH:$HOME/bin
 
-    - name: Verify SnowSQL Installation
-      run: snowsql --version
-     
     - name: Verify SnowSQL Installation
       run: snowsql --version
 
