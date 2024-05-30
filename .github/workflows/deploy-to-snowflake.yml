@@ -22,8 +22,11 @@ jobs:
       run: |
         curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/scripts/installers/ubuntu18/snowflake-snowsql-linux_x86_64.bash
         bash snowflake-snowsql-linux_x86_64.bash --yes
-        export PATH=$PATH:/root/.snowsql/bin
+        echo 'export PATH=$PATH:/root/.snowsql/bin' >> $GITHUB_ENV
 
+    - name: Verify SnowSQL Installation
+      run: snowsql --version
+  
     - name: Run migration script
       run: python .github/workflows/invoke_snowsql.py
       env:
@@ -33,4 +36,3 @@ jobs:
         SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
         SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
         SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-       
