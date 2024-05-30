@@ -20,8 +20,7 @@ jobs:
 
     - name: Install SnowSQL
       run: |
-        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/scripts/installers/ubuntu18/snowflake-snowsql-linux_x86_64.bash
-        bash snowflake-snowsql-linux_x86_64.bash --yes
+        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/scripts/installers/ubuntu18/snowflake-snowsql-linux_x86_64.bash bash snowflake-snowsql-linux_x86_64.bash --yes
 
     - name: Deploy to Snowflake
       env:
