@@ -1,4 +1,4 @@
-name: Deploy to Snowflake
+name: Install and Verify SnowSQL
 
 on:
   push:
@@ -6,42 +6,27 @@ on:
       - main
 
 jobs:
-  deploy:
+  install-snowsql:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install SnowSQL
+    - name: Install Dependencies
       run: |
-          sudo apt-get update
-          sudo apt-get install -y curl
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64_1.2.22.tar.gz
-          tar -xvf snowsql-linux_x86_64_1.2.22.tar.gz
-          export PATH=$PATH:$PWD/snowsql-linux_x86_64_1.2.22/bin
-          snowsql -v
-  
-    - name: Configure SnowSQL
+        sudo apt-get update
+        sudo apt-get install -y curl
+        
+    - name: Download SnowSQL
       run: |
-          snowsql -a ${{ secrets.SF_ACCOUNT }} -u ${{ secrets.SF_USERNAME }} -w ${{ secrets.SF_WAREHOUSE }} -d ${{ secrets.SF_DATABASE }} -s ${{ secrets.SF_SCHEMA }} -r ${{ secrets.SF_ROLE }}
-        env:
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64_1.2.22.tar.gz
+        tar -xvf snowsql-linux_x86_64_1.2.22.tar.gz
+        
+    - name: Set PATH for SnowSQL
+      run: |
+        echo "$PWD/snowsql-linux_x86_64_1.2.22/bin" >> $GITHUB_PATH
 
     - name: Verify SnowSQL Installation
-      run: snowsql --version
-  
-    - name: Run migration script
-      run: python .github/workflows/invoke_snowsql.py
-      env:
-        SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-        SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-        SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-        SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-        SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-        SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      run: |
+        snowsql -v

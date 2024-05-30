@@ -1,0 +1,47 @@
+name: Deploy to Snowflake
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install SnowSQL
+      run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64_1.2.22.tar.gz
+          tar -xvf snowsql-linux_x86_64_1.2.22.tar.gz
+          export PATH=$PATH:$PWD/snowsql-linux_x86_64_1.2.22/bin
+          snowsql -v
+  
+    - name: Configure SnowSQL
+      run: |
+          snowsql -a ${{ secrets.SF_ACCOUNT }} -u ${{ secrets.SF_USERNAME }} -w ${{ secrets.SF_WAREHOUSE }} -d ${{ secrets.SF_DATABASE }} -s ${{ secrets.SF_SCHEMA }} -r ${{ secrets.SF_ROLE }}
+        env:
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+
+    - name: Verify SnowSQL Installation
+      run: snowsql --version
+  
+    - name: Run migration script
+      run: python .github/workflows/invoke_snowsql.py
+      env:
+        SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+        SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+        SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+        SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+        SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+        SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
