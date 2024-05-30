@@ -35,14 +35,3 @@ jobs:
         SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
       run: |
         python .github/workflows/deploy_to_snowflake.py
-
-    - name: import to Snowflake
-      env:
-        SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
-        SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-        SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-        SNOWFLAKE_DATABASE: ${{ secrets.SF_DEV_DATABASE }}
-        SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
-        SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
-      run: |
-        python .github/workflows/import snowflake.py
