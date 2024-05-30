@@ -22,8 +22,7 @@ def execute_snowsql(file_path):
         '-w', SNOWFLAKE_WAREHOUSE,
         '-d', SNOWFLAKE_DATABASE,
         '-r', SNOWFLAKE_ROLE,
-        '-f', file_path,
-        '--variable', f'SNOWFLAKE_PASSWORD={SNOWFLAKE_PASSWORD}'
+        '-f', file_path
     ]
     result = subprocess.run(command, capture_output=True, text=True)
     if result.returncode != 0:
