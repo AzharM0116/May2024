@@ -1,5 +1,2 @@
--- Create table2 with two columns
-CREATE TABLE table2 (
-    column1 INTEGER,
-    column2 STRING
-);
+-- Alter table2 to delete the second column
+ALTER TABLE table2 DROP COLUMN column2;
