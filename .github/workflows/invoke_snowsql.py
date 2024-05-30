@@ -9,8 +9,10 @@ SNOWFLAKE_DATABASE = os.getenv('SNOWFLAKE_DATABASE')
 SNOWFLAKE_WAREHOUSE = os.getenv('SNOWFLAKE_WAREHOUSE')
 SNOWFLAKE_ROLE = os.getenv('SNOWFLAKE_ROLE')
 
-# Path to the Deploy directory
-deploy_dir = 'Deploy'
+# Path to the migration script list file
+migration_script_list_path = 'Deploy/migrationscript.sql'
+# Path to the codebase directory
+codebase_dir = 'Codebase'
 
 def execute_snowsql(file_path):
     command = [
@@ -29,10 +31,20 @@ def execute_snowsql(file_path):
     else:
         print(f"Successfully executed {file_path}: {result.stdout}")
 
-if os.path.exists(deploy_dir) and os.path.isdir(deploy_dir):
-    sql_files = [f for f in os.listdir(deploy_dir) if f.endswith('.sql')]
-    for sql_file in sql_files:
-        file_path = os.path.join(deploy_dir, sql_file)
-        execute_snowsql(file_path)
-else:
-    print(f"Directory {deploy_dir} does not exist.")
+def main():
+    if os.path.exists(migration_script_list_path):
+        with open(migration_script_list_path, 'r') as file:
+            sql_files = file.readlines()
+        
+        for sql_file in sql_files:
+            sql_file = sql_file.strip()  # Remove any leading/trailing whitespace
+            file_path = os.path.join(codebase_dir, sql_file)
+            if os.path.exists(file_path):
+                execute_snowsql(file_path)
+            else:
+                print(f"SQL file {file_path} does not exist.")
+    else:
+        print(f"Migration script list {migration_script_list_path} does not exist.")
+
+if __name__ == "__main__":
+    main()
