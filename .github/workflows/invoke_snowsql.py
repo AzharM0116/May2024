@@ -12,7 +12,7 @@ SNOWFLAKE_ROLE = os.getenv('SNOWFLAKE_ROLE')
 # Path to the migration script list file
 migration_script_list_path = 'Deploy/migrationscript.sql'
 # Path to the codebase directory
-codebase_dir = 'codebase'
+codebase_dir = 'Codebase'
 
 def execute_snowsql(file_path):
     command = [
