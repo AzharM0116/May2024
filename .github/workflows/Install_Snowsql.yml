@@ -1,4 +1,4 @@
-name: Install SnowSQL
+name: Execute SnowSQL Migration
 
 on:
   push:
@@ -6,23 +6,42 @@ on:
       - main
 
 jobs:
-  install_snowsql:
+  execute-snowsql-migration:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y curl unzip
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl
 
-      - name: Download and Install SnowSQL
-        run: |
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64
-          chmod +x snowsql-linux_x86_64
-          ./snowsql-linux_x86_64 -n
-          echo 'export PATH=$PATH:$HOME/bin' >> $GITHUB_ENV
-          export PATH=$PATH:$HOME/bin
+    - name: Install SnowSQL
+      run: |
+        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64_1.2.22.tar.gz
+        tar -xvf snowsql-linux_x86_64_1.2.22.tar.gz
+        export PATH=$PATH:$PWD/snowsql-linux_x86_64_1.2.22/bin
 
-      - name: Verify SnowSQL Installation
-        run: snowsql --version
+    - name: Configure SnowSQL
+      run: |
+        echo "[connections]" > ~/.snowsql/config
+        echo "accountname = ${{ secrets.SF_ACCOUNT }}" >> ~/.snowsql/config
+        echo "username = ${{ secrets.SF_USERNAME }}" >> ~/.snowsql/config
+        echo "password = ${{ secrets.SNOWFLAKE_PASSWORD }}" >> ~/.snowsql/config
+        echo "warehouse = ${{ secrets.SF_WAREHOUSE }}" >> ~/.snowsql/config
+        echo "database = ${{ secrets.SF_DATABASE }}" >> ~/.snowsql/config
+        echo "schema = ${{ secrets.SF_SCHEMA }}" >> ~/.snowsql/config
+        echo "rolename = ${{ secrets.SF_ROLE }}" >> ~/.snowsql/config
+
+    - name: Execute Migration Script
+      run: |
+        # Read the migration.sql file to get the list of SQL files
+        sql_files=$(cat migration.sql | tr ';' '\n')
+        
+        # Execute each SQL file
+        for file in $sql_files; do
+          echo "Executing $file..."
+          snowsql -f $file || { echo "Execution failed for $file"; exit 1; }
+        done
