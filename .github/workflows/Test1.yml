@@ -27,7 +27,7 @@ jobs:
 
       - name: Install SnowSQL
         run: |
-          bash snowsql-1.3.0-linux_x86_64.bash -y
+          bash https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/linux_x86_64/snowsql-1.3.0-linux_x86_64.bash -y
           echo 'export PATH=$PATH:$HOME/.snowsql/bin' >> $GITHUB_ENV
           export PATH=$PATH:$HOME/.snowsql/bin
 
