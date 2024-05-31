@@ -1,4 +1,4 @@
-name: Install SnowSQL
+name: Install and Configure SnowSQL for running the Deployment Script
 
 on:
   push:
