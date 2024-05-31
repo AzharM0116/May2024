@@ -1,4 +1,4 @@
-name: Install SnowSQL
+name: Install SnowSQL From Test File
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       - name: Verify Download
         run: file snowsql-linux_x86_64
 
-      - name: Install SnowSQL
+      - name: Install SnowSQL From Test File 
         run: |
           chmod +x snowsql-linux_x86_64
           ./snowsql-linux_x86_64 -n
