@@ -20,16 +20,12 @@ jobs:
 
       - name: Download SnowSQL installer and signature
         run: |
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/linux_x86_64/snowsql-1.3.0-linux_x86_64.bash
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/linux_x86_64/snowsql-1.3.0-linux_x86_64.bash.asc
 
-    
-
-      - name: Install SnowSQL
-        run: |
-          bash https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/linux_x86_64/snowsql-1.3.0-linux_x86_64.bash -y
-          echo 'export PATH=$PATH:$HOME/.snowsql/bin' >> $GITHUB_ENV
-          export PATH=$PATH:$HOME/.snowsql/bin
+            curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/linux_x86_64/snowsql-1.3.0-linux_x86_64.bash
+        
+            chmod +x snowsql-1.3.0-linux_x86_64.bash
+              
+            ./snowsql-1.3.0-linux_x86_64.bash -y
 
       - name: Verify SnowSQL Installation
         run: snowsql --version
