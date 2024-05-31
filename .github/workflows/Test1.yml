@@ -1,4 +1,4 @@
-name: Install SnowSQL From Test File
+name: Install SnowSQL from test file
 
 on:
   push:
@@ -16,13 +16,19 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y curl file
 
-      - name: Download SnowSQL Latest
-        run: curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64
+      - name: Download SnowSQL
+        run: |
+          curl -o snowsql-linux_x86_64 https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64
+          file snowsql-linux_x86_64
 
-      - name: Verify Download
-        run: file snowsql-linux_x86_64
+      - name: Check for XML Download
+        run: |
+          if grep -q '<?xml version="1.0" encoding="UTF-8"?>' snowsql-linux_x86_64; then
+            cat snowsql-linux_x86_64
+            exit 1
+          fi
 
-      - name: Install SnowSQL From Test File 
+      - name: Install SnowSQL
         run: |
           chmod +x snowsql-linux_x86_64
           ./snowsql-linux_x86_64 -n
