@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y curl file
 
-      - name: Download SnowSQL
+      - name: Download SnowSQL Latest
         run: curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64
 
       - name: Verify Download
